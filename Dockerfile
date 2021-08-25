@@ -7,7 +7,7 @@ ADD --chown=root:root catalinaHome.tar.gz /usr/local/tomcat
 
 # Copy all relevant applications from the directory tree of the CATALINA_HOME
 #ADD --chown=root:root applications.tar.gz /usr/local/tomcat
-COPY ${WAR_FILE} /usr/local/tomcat/webapps/
+COPY --chown=root:root ${WAR_FILE} /usr/local/tomcat/webapps/
 
 # not applicable for the application
 # Copy external resources and configurations
