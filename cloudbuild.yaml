@@ -5,5 +5,5 @@ steps:
   - name: gcr.io/cloud-builders/docker
     args: ["build", "-t", "gcr.io/$PROJECT_ID/tomcat-petclinic:$COMMIT_SHA", "-t", "gcr.io/$PROJECT_ID/tomcat-petclinic:latest", "--build-arg=WAR_FILE=target/petclinic.war", "."]
 images:
-  - 'gcr.io/$PROJECT_ID/tomcat-petclinic:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/tomcat-petclinic:$COMMIT_SHA'
   - 'gcr.io/$PROJECT_ID/tomcat-petclinic:latest'
