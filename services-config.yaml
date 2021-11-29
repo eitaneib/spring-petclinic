@@ -1,0 +1,104 @@
+version: v1beta1
+env: []
+applications:
+    - name: atd
+      type: simple
+      start:
+        - cmd: /usr/sbin/atd -f
+      umask: 18
+      envfile:
+        path: ""
+        ignore_non_exist: false
+    - name: cron
+      type: simple
+      start:
+        - cmd: /usr/sbin/cron -f $EXTRA_OPTS
+      umask: 18
+      envfile:
+        path: /etc/default/cron
+        ignore_non_exist: true
+    - name: rsync
+      type: simple
+      start:
+        - cmd: /usr/bin/rsync --daemon --no-detach
+      umask: 18
+      envfile:
+        path: ""
+        ignore_non_exist: false
+    - name: ssh
+      type: notify
+      prestart:
+        - cmd: /usr/sbin/sshd -t
+      start:
+        - cmd: /usr/sbin/sshd -D $SSHD_OPTS
+      umask: 18
+      envfile:
+        path: /etc/default/ssh
+        ignore_non_exist: true
+      runtime_directories:
+        mode: "0755"
+        paths:
+            - /run/sshd
+    - name: ssh@
+      type: simple
+      start:
+        - cmd: /usr/sbin/sshd -i $SSHD_OPTS
+          ignore_errors: true
+      umask: 18
+      envfile:
+        path: /etc/default/ssh
+        ignore_non_exist: true
+      runtime_directories:
+        mode: "0755"
+        paths:
+            - /run/sshd
+    - name: sshguard
+      type: simple
+      prestart:
+        - cmd: /usr/lib/sshguard/firewall enable
+      start:
+        - cmd: /usr/lib/sshguard/sshguard-journalctl -i /run/sshguard.pid -w $WHITELIST $ARGS
+      pidfile: /run/sshguard.pid
+      umask: 18
+      envfile:
+        path: /etc/default/sshguard
+        ignore_non_exist: true
+    - name: tomcat
+      type: forking
+      start:
+        - cmd: /opt/tomcat/bin/startup.sh
+      user: tomcat
+      group: tomcat
+      umask: 18
+      env:
+        - name: CATALINA_BASE
+          value: /opt/tomcat
+        - name: CATALINA_HOME
+          value: /opt/tomcat
+        - name: CATALINA_OPTS
+          value: -Xms512M -Xmx1024M -server -XX:+UseParallelGC -Djava.net.preferIPv4Stack=true -Djava.net.preferIPv4Addresses=true
+        - name: CATALINA_PID
+          value: /opt/tomcat/temp/tomcat.pid
+        - name: JAVA_HOME
+          value: /usr/lib/jvm/default-java
+        - name: JAVA_OPTS
+          value: -Djava.security.egd=file:///dev/urandom
+      envfile:
+        path: ""
+        ignore_non_exist: false
+    - name: ua-messaging
+      type: oneshot
+      start:
+        - cmd: /usr/bin/python3 /usr/lib/ubuntu-advantage/ua_update_messaging.py
+      umask: 18
+      envfile:
+        path: ""
+        ignore_non_exist: false
+    - name: ua-reboot-cmds
+      type: oneshot
+      start:
+        - cmd: /usr/bin/python3 /usr/lib/ubuntu-advantage/reboot_cmds.py
+      umask: 18
+      envfile:
+        path: ""
+        ignore_non_exist: false
