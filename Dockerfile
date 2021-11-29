@@ -25,7 +25,7 @@ ADD services-config.yaml /.m4a/
 #               package2=version \
 #               package3=version
 # RUN yum update
-# RUN wget http://github.com
+# RUN wget https://github.com
 
 COPY --chown=root:root ${WAR_FILE} /opt/tomcat/webapps/
 
