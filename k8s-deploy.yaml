@@ -1,0 +1,62 @@
+# Stateless application specification
+# The Deployment creates a single replicated Pod, indicated by the 'replicas' field
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: petclinic-springboot
+    migrate-for-anthos-optimization: "true"
+    migrate-for-anthos-version: v1.9.0
+  name: petclinic-springboot
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: petclinic-springboot
+      migrate-for-anthos-optimization: "true"
+      migrate-for-anthos-version: v1.9.0
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: petclinic-springboot
+        migrate-for-anthos-optimization: "true"
+        migrate-for-anthos-version: v1.9.0
+    spec:
+      containers:
+      - env:
+        - name: HC_V2K_SERVICE_MANAGER
+          value: "true"
+        image: petclinic-image
+        imagePullPolicy: IfNotPresent
+        name: petclinic-springboot
+        resources: {}
+status: {}
+
+---
+# Service specification -
+# This specification creates a new Service object which targets TCP port 8080 on any Pod with the "app"="petclinic-springboot" label
+# You can expose this service using a native LoadBalancer by adding "type: LoadBalancer" to the spec
+apiVersion: v1
+kind: Service
+metadata:
+  creationTimestamp: null
+  labels:
+    migrate-for-anthos-optimization: "true"
+    migrate-for-anthos-version: v1.9.0
+  name: petclinic-springboot-java
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    targetPort: 8080
+  selector:
+    app: petclinic-springboot
+  type: LoadBalancer
+status:
+  loadBalancer: {}
+
+---
+
