@@ -15,7 +15,7 @@ steps:
         "--delivery-pipeline", "petclinic-delivery",
         "--region", "us-central1",
         "--annotations", "commitId=${REVISION_ID}",
-        "--images", "IMAGE_NAME=gcr.io/$PROJECT_ID/petclinic-springboot:${COMMIT_SHA}"
+        "--images", "petclinic-image=gcr.io/$PROJECT_ID/petclinic-springboot:${COMMIT_SHA}"
       ]
 images:
   - 'gcr.io/$PROJECT_ID/petclinic-springboot:$COMMIT_SHA'
