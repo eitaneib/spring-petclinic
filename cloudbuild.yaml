@@ -10,13 +10,13 @@ steps:
   - name: gcr.io/google.com/cloudsdktool/cloud-sdk
     entrypoint: gcloud
     args:
-    [
-      "beta", "deploy", "releases", "create", "rel-${SHORT_SHA}",
-      "--delivery-pipeline", "petclinic-delivery",
-      "--region", "us-central1",
-      "--annotations", "commitId=${REVISION_ID}",
-      "--images", "IMAGE_NAME=gcr.io/$PROJECT_ID/petclinic-springboot:${COMMIT_SHA}"
-    ]
+      [
+        "beta", "deploy", "releases", "create", "rel-${SHORT_SHA}",
+        "--delivery-pipeline", "petclinic-delivery",
+        "--region", "us-central1",
+        "--annotations", "commitId=${REVISION_ID}",
+        "--images", "IMAGE_NAME=gcr.io/$PROJECT_ID/petclinic-springboot:${COMMIT_SHA}"
+      ]
 images:
   - 'gcr.io/$PROJECT_ID/petclinic-springboot:$COMMIT_SHA'
   - 'gcr.io/$PROJECT_ID/petclinic-springboot:latest'
